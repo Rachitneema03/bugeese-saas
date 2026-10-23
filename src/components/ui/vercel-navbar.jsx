@@ -78,6 +78,8 @@ const storyLinks = [
 ];
 
 export function VercelNavbar() {
+  const pathname = usePathname();
+  const { totalCount, openDrawer } = useCart();
   const { profile } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);

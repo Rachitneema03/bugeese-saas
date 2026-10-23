@@ -11,6 +11,10 @@ const testConfig = {
   customer_share_bps_silver: 6500, // 65% headroom share
   customer_share_bps_gold: 7000,   // 70% headroom share
   qr_boost_bps: 1000,              // +10% boost for QR insert
+  tier_silver_threshold_paise: 50000,  // Rs 500 commission avoided
+  tier_gold_threshold_paise: 200000,  // Rs 2,000 commission avoided
+  qr_boost_first_direct_bps: 1000, // +10%
+  qr_boost_repeat_bps: 500,        // +5%
   cap_bps: 7500,                   // 75% hard ceiling
   min_order_for_discount_paise: 20000, // Rs 200 min basket
   min_margin_paise: 4000,          // Rs 40 minimum profit floor
