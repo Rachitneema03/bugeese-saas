@@ -1,15 +1,28 @@
 /**
  * Database client for Bugeese backend.
- * Supports both Live PostgreSQL (via pg Pool) and an In-Memory mock DB
- * so you can develop, test, and demo without requiring a local Postgres setup.
+ * Provides unified query() and Supabase client access.
  */
 require('dotenv').config();
-const { Pool } = require('pg');
+const { createClient } = require('@supabase/supabase-js');
 
-let pool = null;
-let useMock = process.env.USE_MOCK_DB === 'true' || !process.env.DATABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL || 'https://vdewempvdxdixlgainro.supabase.co';
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-// In-Memory store for mock / offline testing
+let supabase = null;
+let useMock = process.env.USE_MOCK_DB === 'true' || !serviceRoleKey;
+
+if (serviceRoleKey) {
+  try {
+    supabase = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { persistSession: false }
+    });
+  } catch (err) {
+    console.warn('Failed to init Supabase client, using mock store:', err.message);
+    useMock = true;
+  }
+}
+
+// In-Memory store fallback & test seed store
 const mockDB = {
   users: [],
   shops: [],
@@ -26,64 +39,52 @@ const mockDB = {
   payments: []
 };
 
-function getPool() {
-  if (!pool && !useMock) {
-    try {
-      pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false
-      });
-      pool.on('error', (err) => {
-        console.error('Unexpected pg error, falling back to mock mode:', err.message);
-        useMock = true;
-      });
-    } catch (e) {
-      console.warn('Failed to connect to Postgres, using in-memory store:', e.message);
-      useMock = true;
-    }
-  }
-  return pool;
-}
-
 /**
- * Execute a query against Postgres or Mock store
+ * Executes a query against Supabase or mock store
  */
 async function query(text, params = []) {
-  if (!useMock) {
-    try {
-      const p = getPool();
-      return await p.query(text, params);
-    } catch (err) {
-      console.warn(`Postgres query failed (${err.message}), handling in mock store...`);
+  const clean = text.trim();
+
+  // If using Supabase and table exists, try fetching via Supabase
+  if (supabase && !useMock) {
+    if (/select \* from aggregator_config where is_active = true/i.test(clean)) {
+      const { data, error } = await supabase
+        .from('aggregator_config')
+        .select('*')
+        .eq('is_active', true)
+        .limit(1);
+      if (!error && data && data.length > 0) {
+        return { rows: data, rowCount: data.length };
+      }
+    }
+    if (/select \* from menu_items/i.test(clean)) {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*');
+      if (!error && data && data.length > 0) {
+        return { rows: data, rowCount: data.length };
+      }
     }
   }
 
-  // Basic mock SQL dispatcher for hackathon testing & demos
-  const clean = text.trim();
-
-  // SELECT from aggregator_config
+  // Fallback to mockDB store
   if (/select \* from aggregator_config where is_active = true/i.test(clean)) {
     const active = mockDB.aggregator_config.filter(c => c.is_active);
     return { rows: active, rowCount: active.length };
   }
-
-  // SELECT from menu_items
   if (/select \* from menu_items/i.test(clean)) {
     return { rows: mockDB.menu_items, rowCount: mockDB.menu_items.length };
   }
-
-  // SELECT from combos
   if (/select \* from combos/i.test(clean)) {
     return { rows: mockDB.combos, rowCount: mockDB.combos.length };
   }
 
-  // Generic fallback
   return { rows: [], rowCount: 0 };
 }
 
 module.exports = {
+  supabase,
   query,
-  getPool,
   mockDB,
   isMock: () => useMock,
   setMock: (val) => { useMock = val; }

@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 import {
   UtensilsCrossed,
   MapPin,
@@ -31,6 +32,7 @@ import {
   Sparkles,
   ChevronRight,
   Flame,
+  User,
 } from "lucide-react";
 
 // Menu categories with quick links
@@ -74,6 +76,7 @@ const storyLinks = [
 ];
 
 export function VercelNavbar() {
+  const { profile } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -243,7 +246,20 @@ export function VercelNavbar() {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
-            
+            {/* Direct Club Auth / Profile Link */}
+            <Link
+              href="/login"
+              className={cn(
+                "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all",
+                profile
+                  ? "bg-[#FFBA12]/15 text-[#FFBA12] border-[#FFBA12]/30 hover:bg-[#FFBA12]/25"
+                  : "bg-white/5 text-neutral-300 border-white/10 hover:bg-white/10 hover:text-white"
+              )}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>{profile ? "Account" : "Sign In"}</span>
+            </Link>
+
             {/* Quick Order Button */}
             <Link
               href="/menu"

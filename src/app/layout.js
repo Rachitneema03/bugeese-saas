@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Anton } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import VercelNavbar from "@/components/ui/vercel-navbar";
 import MobileFloatingNav from "@/components/ui/MobileFloatingNav";
@@ -33,11 +34,13 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-[#17130F] text-[#F6F0E5] font-sans overflow-x-hidden">
-        <CartProvider>
-          <VercelNavbar />
-          {children}
-          <MobileFloatingNav />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <VercelNavbar />
+            {children}
+            <MobileFloatingNav />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

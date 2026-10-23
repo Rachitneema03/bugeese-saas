@@ -7,11 +7,14 @@ import {
   Home,
   UtensilsCrossed,
   MapPin,
+  User,
 } from "lucide-react";
 import styles from "./MobileFloatingNav.module.css";
+import { useAuth } from "@/context/AuthContext";
 
 export default function MobileFloatingNav() {
   const pathname = usePathname();
+  const { profile } = useAuth();
   const [activeHash, setActiveHash] = useState("");
 
   useEffect(() => {
@@ -26,6 +29,7 @@ export default function MobileFloatingNav() {
   const isHomeActive = pathname === "/" && (activeHash === "" || activeHash === "#");
   const isMenuActive = pathname === "/menu";
   const isOutletsActive = pathname === "/" && activeHash === "#outlets";
+  const isLoginActive = pathname === "/login";
 
   return (
     <nav className={styles.mobileNavContainer} aria-label="Mobile Bottom Navigation">
@@ -47,6 +51,15 @@ export default function MobileFloatingNav() {
         >
           <UtensilsCrossed />
           <span>Menu</span>
+        </Link>
+
+        {/* Direct Club / Profile */}
+        <Link
+          href="/login"
+          className={isLoginActive ? styles.active : ""}
+        >
+          <User />
+          <span>{profile ? "Account" : "Sign In"}</span>
         </Link>
 
         {/* Outlets / Contact */}
