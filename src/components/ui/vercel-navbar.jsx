@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -19,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -93,7 +95,7 @@ export function VercelNavbar() {
     <header
       className={cn(
         "hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
+        isScrolled || pathname === "/menu"
           ? "bg-[#17130F]/90 backdrop-blur-md border-b border-white/10 shadow-lg py-2.5"
           : "bg-gradient-to-b from-[#17130F]/80 via-[#17130F]/40 to-transparent py-4"
       )}
@@ -266,9 +268,14 @@ export function VercelNavbar() {
               className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-black bg-[#FFBA12] hover:bg-[#ffc636] active:scale-95 rounded-full transition-all shadow-md shadow-[#FFBA12]/20"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>Order Now</span>
+              <span>{pathname === "/menu" ? "Cart" : "Order Now"}</span>
+              {totalCount > 0 && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#C8201A] text-[11px] font-black text-white ml-0.5">
+                  {totalCount}
+                </span>
+              )}
             </Link>
-
+              
             {/* Quick Contact Dropdown */}
             <div className="hidden sm:block">
               <DropdownMenu>
@@ -362,14 +369,16 @@ export function VercelNavbar() {
           </div>
 
           <div className="pt-2 border-t border-white/10">
-            <Link
-              href="/menu"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-black bg-[#FFBA12] rounded-xl shadow-lg"
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openDrawer();
+              }}
+              className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-black bg-[#FFBA12] rounded-xl shadow-lg cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>Order Food Online</span>
-            </Link>
+              <span>View Cart ({totalCount})</span>
+            </button>
           </div>
         </div>
       )}
