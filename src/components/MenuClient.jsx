@@ -15,60 +15,9 @@ export default function MenuClient() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#17130F] text-[#F6F0E5] relative">
-      {/* ── Top Navigation Bar with Cart Button (Exclusive to Menu Page) ── */}
-      <header className="sticky top-0 z-40 w-full bg-[#17130F]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-condensed text-3xl font-black uppercase tracking-tight text-white">
-              BUGEESE<span className="text-[#D9251B]">.</span>
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            <Link
-              href="/"
-              className="text-xs sm:text-sm font-bold text-white/80 hover:text-[#FFBA12] transition-colors"
-            >
-              &larr; <span className="hidden sm:inline">Back to Experience</span><span className="sm:hidden">Home</span>
-            </Link>
-
-            {/* Direct Delivery Platform Links */}
-            <a
-              href={BUGEESE_CONFIG.ordering.zomato.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex rounded-full border border-white/20 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-white/10"
-            >
-              Zomato
-            </a>
-            <a
-              href={BUGEESE_CONFIG.ordering.swiggy.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex rounded-full border border-white/20 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-white/10"
-            >
-              Swiggy
-            </a>
-
-            {/* Cart Trigger Button */}
-            <button
-              type="button"
-              onClick={openDrawer}
-              aria-label={`Open shopping cart with ${totalCount} items`}
-              className="flex items-center gap-2.5 rounded-full bg-[#FFBA12] px-4 sm:px-5 py-2 text-xs sm:text-sm font-black uppercase tracking-wider text-[#17130F] shadow-md hover:bg-amber-400 hover:scale-105 transition-all cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              <span>Cart</span>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#C8201A] text-[11px] font-black text-white">
-                {totalCount}
-              </span>
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#17130F] text-[#F6F0E5] relative pt-20">
+      {/* ── Cart Drawer Component ── */}
+      <CartDrawer />
 
       {/* ── Confirmation Toast ── */}
       {toastMessage && (
@@ -77,9 +26,6 @@ export default function MenuClient() {
           <span className="truncate">{toastMessage}</span>
         </div>
       )}
-
-      {/* ── Cart Drawer Component ── */}
-      <CartDrawer />
 
       {/* ── Menu Banner ── */}
       <div className="bg-[#FFBA12] text-[#17130F] px-4 py-14 sm:px-8 sm:py-20 text-center">
@@ -98,51 +44,55 @@ export default function MenuClient() {
 
       {/* ── Menu Categories Grid ── */}
       <main className="mx-auto max-w-7xl px-4 sm:px-8 py-14 sm:py-20">
-        <div className="space-y-16">
-          {FULL_MENU_DATA.map((section, idx) => (
-            <div key={idx} className="border-b border-white/10 pb-16 last:border-0">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="font-condensed text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-[#FFBA12]">
-                  {section.category}
+        <div className="space-y-20">
+          {FULL_MENU_DATA.map((category) => (
+            <div key={category.id} id={category.id} className="scroll-mt-28">
+              {/* Category Header */}
+              <div className="border-b border-white/10 pb-4 mb-8">
+                <h2 className="font-condensed text-4xl sm:text-5xl font-black uppercase tracking-tight text-white">
+                  {category.title}
                 </h2>
-                <span className="text-xs uppercase font-bold text-white/50">
-                  {section.items.length} Items
-                </span>
+                <p className="text-sm sm:text-base text-[#F6F0E5]/70 mt-1">
+                  {category.description}
+                </p>
               </div>
 
+              {/* Items Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {section.items.map((item) => (
+                {category.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col justify-between rounded-2xl bg-[#2B241D] p-6 border border-white/5 shadow-md hover:border-[#FFBA12]/30 transition-all group"
+                    className="flex flex-col justify-between rounded-3xl bg-[#2B241D] p-6 border border-white/10 shadow-lg hover:border-[#FFBA12]/40 transition-all group"
                   >
                     <div>
-                      {/* Top Badges */}
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-black uppercase tracking-wider text-[#D9251B] bg-[#D9251B]/15 px-2.5 py-0.5 rounded-full">
-                          {item.tag}
-                        </span>
-                        <span className="flex items-center justify-center w-4 h-4 rounded-xs border border-[#10b981] p-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
-                        </span>
+                      {/* Item Top Info */}
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="flex items-center justify-center w-4 h-4 rounded-xs border border-[#10b981] p-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                          </span>
+                          <h3 className="font-condensed text-2xl font-bold uppercase text-white group-hover:text-[#FFBA12] transition-colors">
+                            {item.name}
+                          </h3>
+                        </div>
+                        {item.tag && (
+                          <span className="shrink-0 text-[10px] font-black uppercase tracking-wider bg-[#FFBA12] text-[#17130F] px-2 py-0.5 rounded-full">
+                            {item.tag}
+                          </span>
+                        )}
                       </div>
 
-                      {/* Product Name */}
-                      <h3 className="font-condensed text-2xl font-black uppercase text-white mb-2 group-hover:text-[#FFBA12] transition-colors">
-                        {item.name}
-                      </h3>
-
-                      {/* Product Description */}
-                      <p className="text-sm text-[#F6F0E5]/70 leading-relaxed mb-4">
+                      {/* Item Description */}
+                      <p className="text-xs sm:text-sm text-[#F6F0E5]/70 leading-relaxed mb-6">
                         {item.desc}
                       </p>
                     </div>
 
-                    {/* Bottom Pricing & Add to Cart Action */}
-                    <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+                    {/* Price & Add to Cart Action */}
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
                       <div>
-                        <span className="text-xs text-white/50 block font-bold uppercase tracking-wider">Price</span>
-                        <span className="font-condensed text-2xl font-black text-white">
+                        <span className="text-xs text-white/50 block font-medium">Price</span>
+                        <span className="font-condensed text-2xl font-black text-[#FFBA12]">
                           ₹{item.price}
                         </span>
                       </div>
@@ -163,34 +113,6 @@ export default function MenuClient() {
             </div>
           ))}
         </div>
-
-        {/* Delivery Platforms Callout */}
-        <div className="mt-16 rounded-3xl bg-linear-to-r from-[#D9251B] to-[#b01c13] p-8 sm:p-12 text-center text-white shadow-2xl">
-          <h3 className="font-condensed text-3xl sm:text-5xl font-black uppercase">
-            Order for Instant Delivery
-          </h3>
-          <p className="mt-2 text-base text-white/90 max-w-lg mx-auto">
-            Prefer food delivery apps? Order directly from Bugeese Jabalpur outlets on Swiggy or Zomato.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            <a
-              href={BUGEESE_CONFIG.ordering.zomato.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-white px-7 py-3.5 text-sm font-black uppercase tracking-wider text-[#17130F] shadow-lg hover:bg-gray-100 transition-transform hover:scale-105"
-            >
-              Order on Zomato
-            </a>
-            <a
-              href={BUGEESE_CONFIG.ordering.swiggy.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-[#17130F] px-7 py-3.5 text-sm font-black uppercase tracking-wider text-white shadow-lg hover:bg-black transition-transform hover:scale-105"
-            >
-              Order on Swiggy
-            </a>
-          </div>
-        </div>
       </main>
 
       {/* ── Footer ── */}
@@ -198,7 +120,7 @@ export default function MenuClient() {
         <p>© 2026 Bugeese Fast Casual. 100% Pure Vegetarian Brand.</p>
         <div className="mt-2 flex justify-center gap-4">
           <Link href="/" className="hover:text-white">Home Experience</Link>
-          <a href={`mailto:${BUGEESE_CONFIG.contact.email}`} className="hover:text-white">Franchise Inquiry</a>
+          <a href={`mailto:${BUGEESE_CONFIG.contact.email}`} className="hover:text-white">Contact Us</a>
         </div>
       </footer>
     </div>
