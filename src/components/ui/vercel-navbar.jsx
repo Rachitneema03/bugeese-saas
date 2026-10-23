@@ -24,14 +24,11 @@ import {
   UtensilsCrossed,
   MapPin,
   Leaf,
-  Store,
   PhoneCall,
   ShoppingBag,
   Menu as MenuIcon,
   X,
-  Compass,
   Sparkles,
-  ExternalLink,
   ChevronRight,
   Flame,
 } from "lucide-react";
@@ -63,22 +60,16 @@ const menuCategories = [
 // Brand story / About links
 const storyLinks = [
   {
-    title: "Living City Map",
-    description: "Explore the interactive Jabalpur brand map and our journey.",
-    href: "/#living-city-map",
-    icon: MapPin,
-  },
-  {
     title: "100% Pure Vegetarian",
     description: "Dedicated zero egg, zero meat kitchen crafted by a 5-star hotel chef.",
     href: "/#vegetarian-story",
     icon: Leaf,
   },
   {
-    title: "Franchise With Us",
-    description: "Join India's fastest-growing vegetarian burger movement.",
-    href: "/#franchise",
-    icon: Store,
+    title: "Store Locations",
+    description: "Visit our outlets across Jabalpur for fresh, handcrafted burgers.",
+    href: "/#outlets",
+    icon: MapPin,
   },
 ];
 
@@ -196,7 +187,7 @@ export function VercelNavbar() {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* Journey & Story Dropdown */}
+                {/* Brand Story Dropdown */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="hover:text-[#FFBA12]">
                     Our Story
@@ -234,16 +225,6 @@ export function VercelNavbar() {
                       </div>
                     </div>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Franchise link */}
-                <NavigationMenuItem>
-                  <NavigationMenuLink
-                    href="/#franchise"
-                    className={cn(navigationMenuTriggerStyle(), "hover:text-[#FFBA12]")}
-                  >
-                    Franchise
-                  </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 {/* Outlets link */}
@@ -300,16 +281,7 @@ export function VercelNavbar() {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
-                        href="/#franchise"
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <Store className="w-4 h-4 text-[#FFBA12]" />
-                        <span>Franchise Inquiry</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/#living-city-map"
+                        href="/#outlets"
                         className="flex items-center gap-2 cursor-pointer"
                       >
                         <MapPin className="w-4 h-4 text-[#FFBA12]" />
@@ -358,25 +330,11 @@ export function VercelNavbar() {
               <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/#living-city-map"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 text-base font-medium text-neutral-300 hover:bg-white/5 rounded-lg"
-            >
-              Living City Map & Journey
-            </Link>
-            <Link
               href="/#vegetarian-story"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 text-base font-medium text-neutral-300 hover:bg-white/5 rounded-lg"
             >
               Why 100% Pure Veg
-            </Link>
-            <Link
-              href="/#franchise"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 text-base font-medium text-neutral-300 hover:bg-white/5 rounded-lg"
-            >
-              Franchise Opportunities
             </Link>
             <Link
               href="/#outlets"

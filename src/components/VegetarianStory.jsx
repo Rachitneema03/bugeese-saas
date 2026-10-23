@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export default function VegetarianStory() {
   return (
@@ -34,7 +33,7 @@ export default function VegetarianStory() {
             </p>
 
             {/* Core Brand Pillars */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10">
               <div>
                 <span className="font-condensed text-3xl font-black text-[#D9251B] block">01</span>
                 <h4 className="text-base font-bold text-white uppercase mt-1">Zero Compromise</h4>
@@ -50,16 +49,6 @@ export default function VegetarianStory() {
                 <h4 className="text-base font-bold text-white uppercase mt-1">Freshly Melted</h4>
                 <p className="text-xs text-[#F6F0E5]/70 mt-1">Layered hot per order with molten cheese sauces and crunchy crisps.</p>
               </div>
-            </div>
-
-            <div>
-              <Link
-                href="/menu"
-                className="inline-flex items-center gap-3 rounded-full bg-[#D9251B] px-8 py-4 text-base font-black uppercase tracking-wider text-white shadow-lg transition-transform duration-200 hover:scale-105 hover:bg-[#b01c13]"
-              >
-                Discover Our Story & Menu
-                <span>&rarr;</span>
-              </Link>
             </div>
           </div>
 
