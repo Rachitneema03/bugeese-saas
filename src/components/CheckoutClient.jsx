@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { BUGEESE_CONFIG } from "@/data/brandData";
+import { useAuth } from "@/context/AuthContext";
+import TierProgressCard from "@/components/ui/TierProgressCard";
 
 const DRAFT_STORAGE_KEY = "bugeese_checkout_draft";
 
@@ -26,6 +28,9 @@ function subscribeDraft(callback) {
 export default function CheckoutClient() {
   const router = useRouter();
   const { items, totalCount, subtotal, clearCart } = useCart();
+  const { user, profile } = useAuth();
+  const [quoteData, setQuoteData] = useState(null);
+  const [isQuoting, setIsQuoting] = useState(false);
 
   // Read stored draft safely using useSyncExternalStore
   const draftRaw = useSyncExternalStore(subscribeDraft, getDraftSnapshot, getServerSnapshot);
@@ -61,6 +66,65 @@ export default function CheckoutClient() {
 
   // Confirmed Order Snapshot state (persisted across active cart clear)
   const [confirmedOrder, setConfirmedOrder] = useState(null);
+
+  // Fetch Authoritative Quote with Feature 2 Tier Incentive from Backend Engine
+  useEffect(() => {
+    if (items.length === 0) return;
+    let isMounted = true;
+    async function fetchQuote() {
+      setIsQuoting(true);
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const quotePayload = {
+          items: items.map(item => ({
+            menu_item_id: item.menu_item_id || 1,
+            qty: item.quantity
+          })),
+          user_id: user?.id || null,
+          tier: profile?.tier || "bronze",
+          acquisition_class: "qr_attributed"
+        };
+        const res = await fetch(`${apiUrl}/api/orders/quote`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(quotePayload)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted) setQuoteData(data);
+        }
+      } catch (err) {
+        // Fallback calculation using pure Feature 2 logic
+        const subtotalPaise = subtotal * 100;
+        const commissionPaise = Math.round(subtotalPaise * 0.25);
+        const postedBal = (profile?.commission_avoided || 350) * 100;
+        const projBal = postedBal + commissionPaise;
+        const isUpgrade = projBal >= 50000 && postedBal < 50000;
+        if (isMounted) {
+          setQuoteData({
+            tier_view: {
+              currentTier: profile?.tier || "bronze",
+              currentTierName: (profile?.tier || "bronze").toUpperCase(),
+              applicableTier: isUpgrade ? "silver" : (profile?.tier || "bronze"),
+              applicableTierName: isUpgrade ? "Silver" : "Bronze",
+              isTierUpgrade: isUpgrade,
+              postedBalancePaise: postedBal,
+              projectedBalancePaise: projBal,
+              orderCommissionAvoidedPaise: commissionPaise,
+              progressText: isUpgrade ? null : `₹${Math.max(0, Math.round((50000 - postedBal)/100))} commission avoided toward Silver.`,
+              projectedUpgradeMessage: isUpgrade ? "Complete this order to reach Silver!" : null,
+              discountPaise: Math.min(Math.floor(commissionPaise * 0.6), 1500),
+              totalToPayPaise: Math.max(0, subtotalPaise - Math.min(Math.floor(commissionPaise * 0.6), 1500))
+            }
+          });
+        }
+      } finally {
+        if (isMounted) setIsQuoting(false);
+      }
+    }
+    fetchQuote();
+    return () => { isMounted = false; };
+  }, [items, user, profile, subtotal]);
 
   // Save draft whenever inputs change before completion
   useEffect(() => {
@@ -737,6 +801,10 @@ export default function CheckoutClient() {
                 </div>
 
                 {/* Price Breakdown Card */}
+                <div>
+                  <TierProgressCard tierView={quoteData?.tier_view} isDemo={true} />
+                </div>
+
                 <div className="rounded-3xl bg-[#1B1A17] p-6 sm:p-7 border border-white/10 shadow-xl space-y-4">
                   <h3 className="font-condensed text-xl font-black uppercase text-white border-b border-white/10 pb-3">
                     Demo Price Summary
