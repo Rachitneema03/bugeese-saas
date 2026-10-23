@@ -89,13 +89,13 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#ordering-section" className="hover:text-[#FFBA12] transition-colors">
-                  Order Online (Swiggy & Zomato)
+                <a href="#vegetarian-story" className="hover:text-[#FFBA12] transition-colors">
+                  Why 100% Pure Veg
                 </a>
               </li>
               <li>
-                <a href="#franchise" className="hover:text-[#FFBA12] transition-colors">
-                  Franchise Opportunities
+                <a href="#outlets" className="hover:text-[#FFBA12] transition-colors">
+                  Outlet Locations
                 </a>
               </li>
             </ul>
@@ -136,9 +136,9 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 gap-4">
           <p>© 2026 Bugeese. All rights reserved. 100% Pure Vegetarian Brand.</p>
           <div className="flex gap-6">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <Link href="/menu" className="hover:text-white transition-colors">Menu</Link>
-            <a href="#franchise" className="hover:text-white transition-colors">Franchise</a>
-            <a href="#ordering-section" className="hover:text-white transition-colors">Order Now</a>
+            <a href="#outlets" className="hover:text-white transition-colors">Outlets</a>
           </div>
         </div>
       </div>

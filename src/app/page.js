@@ -1,9 +1,6 @@
 import HeroSequence from "@/components/HeroSequence";
-import LivingCityMap from "@/components/LivingCityMap";
 import MenuPreview from "@/components/MenuPreview";
 import VegetarianStory from "@/components/VegetarianStory";
-import OrderingOptions from "@/components/OrderingOptions";
-import FranchiseSection from "@/components/FranchiseSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -23,33 +20,21 @@ export default function Home() {
       {/* 
         Foreground Brand Experience Content:
         - Stacks cleanly over/after the hero (z-10) with opaque solid backgrounds
-        - REQUIRED FINAL LANDING PAGE FLOW:
+        - Cleaned landing page flow:
           1. Hero (Desktop/Mobile Sequence)
-          2. Living City Map — Bugeese Brand Journey
-          3. Pick Your Craving — Menu Preview
-          4. Vegetarian Brand Story (100% Vegetarian. Full-On Flavour.)
-          5. Two Ways to Get Your Bugeese (Ordering Options)
-          6. Franchise Section
-          7. Footer
+          2. Pick Your Craving — Menu Preview
+          3. Vegetarian Brand Story (100% Vegetarian. Full-On Flavour.)
+          4. Footer
       */}
       <main className="relative z-10 w-full shadow-2xl">
-        {/* 2. Living City Map: Bugeese Brand Journey */}
-        <LivingCityMap />
-
-        {/* 3. Pick Your Craving: Food Menu Preview */}
+        {/* Pick Your Craving: Food Menu Preview */}
         <MenuPreview />
 
-        {/* 4. Vegetarian Brand Story */}
+        {/* Vegetarian Brand Story */}
         <VegetarianStory />
-
-        {/* 5. Ordering Options */}
-        <OrderingOptions />
-
-        {/* 6. Franchise Section */}
-        <FranchiseSection />
       </main>
 
-      {/* 7. Footer */}
+      {/* Footer */}
       <Footer />
     </div>
   );
