@@ -1,0 +1,19 @@
+{
+  "name": "bugeese-backend",
+  "version": "1.0.0",
+  "description": "Bugeese Commission-Optimized Direct Ordering Backend",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/**/*.test.js",
+    "db:init": "node scripts/init-db.js",
+    "db:seed": "node scripts/seed-db.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.1"
+  }
+}
