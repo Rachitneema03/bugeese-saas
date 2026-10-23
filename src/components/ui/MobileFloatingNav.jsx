@@ -32,7 +32,7 @@ export default function MobileFloatingNav() {
   const isLoginActive = pathname === "/login";
 
   return (
-    <nav className={styles.mobileNavContainer} aria-label="Mobile Bottom Navigation">
+    <nav className={`md:hidden ${styles.mobileNavContainer}`} aria-label="Mobile Bottom Navigation">
       <div className={styles.menu}>
         {/* Home */}
         <Link
