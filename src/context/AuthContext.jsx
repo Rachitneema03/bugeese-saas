@@ -130,8 +130,23 @@ export function AuthProvider({ children }) {
   // Supabase Phone OTP / Magic Link
   const signInWithOtp = async (phoneOrEmail) => {
     if (!isSupabaseConfigured || !supabase) {
-      // Fallback: auto-login mock
-      return signInDemoUser("bronze");
+      const isEmail = phoneOrEmail.includes("@");
+      const name = isEmail ? phoneOrEmail.split("@")[0] : "Direct Member";
+      const customUser = {
+        id: "user_" + Date.now(),
+        email: isEmail ? phoneOrEmail : "",
+        phone: isEmail ? "" : phoneOrEmail,
+        name,
+        tier: "bronze",
+        role: "customer",
+        commission_avoided: 0
+      };
+      setUser({ id: customUser.id, email: customUser.email });
+      setProfile(customUser);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bugeese_mock_user", JSON.stringify(customUser));
+      }
+      return customUser;
     }
     const isEmail = phoneOrEmail.includes("@");
     if (isEmail) {
@@ -145,7 +160,23 @@ export function AuthProvider({ children }) {
 
   const verifyOtp = async (phoneOrEmail, token) => {
     if (!isSupabaseConfigured || !supabase) {
-      return signInDemoUser("bronze");
+      const isEmail = phoneOrEmail.includes("@");
+      const name = isEmail ? phoneOrEmail.split("@")[0] : "Direct Member";
+      const customUser = {
+        id: "user_" + Date.now(),
+        email: isEmail ? phoneOrEmail : "",
+        phone: isEmail ? "" : phoneOrEmail,
+        name,
+        tier: "bronze",
+        role: "customer",
+        commission_avoided: 0
+      };
+      setUser({ id: customUser.id, email: customUser.email });
+      setProfile(customUser);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bugeese_mock_user", JSON.stringify(customUser));
+      }
+      return customUser;
     }
     const isEmail = phoneOrEmail.includes("@");
     const { data, error } = await supabase.auth.verifyOtp({
@@ -159,7 +190,22 @@ export function AuthProvider({ children }) {
 
   const signInWithPassword = async (email, password) => {
     if (!isSupabaseConfigured || !supabase) {
-      return signInDemoUser("bronze");
+      const name = email.split("@")[0] || "Direct Member";
+      const customUser = {
+        id: "user_" + Date.now(),
+        email,
+        phone: "",
+        name,
+        tier: "bronze",
+        role: "customer",
+        commission_avoided: 0
+      };
+      setUser({ id: customUser.id, email: customUser.email });
+      setProfile(customUser);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bugeese_mock_user", JSON.stringify(customUser));
+      }
+      return customUser;
     }
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
@@ -168,7 +214,21 @@ export function AuthProvider({ children }) {
 
   const signUpWithPassword = async (email, password, name) => {
     if (!isSupabaseConfigured || !supabase) {
-      return signInDemoUser("bronze");
+      const customUser = {
+        id: "user_" + Date.now(),
+        email,
+        phone: "",
+        name: name || email.split("@")[0] || "Direct Member",
+        tier: "bronze",
+        role: "customer",
+        commission_avoided: 0
+      };
+      setUser({ id: customUser.id, email: customUser.email });
+      setProfile(customUser);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bugeese_mock_user", JSON.stringify(customUser));
+      }
+      return customUser;
     }
     const { data, error } = await supabase.auth.signUp({
       email,

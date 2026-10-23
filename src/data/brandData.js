@@ -80,6 +80,9 @@ export const MENU_PREVIEW_ITEMS = [
 
 export const FULL_MENU_DATA = [
   {
+    id: "burgers",
+    title: "Signature Gourmet Burgers",
+    description: "Chef-crafted vegetarian burgers on toasted sesame buns.",
     category: "Signature Gourmet Burgers",
     items: [
       {
@@ -133,6 +136,9 @@ export const FULL_MENU_DATA = [
     ]
   },
   {
+    id: "paninis",
+    title: "Artisanal Toasted Paninis & Wraps",
+    description: "Pressed hot with melted cheeses and house relishes.",
     category: "Artisanal Toasted Paninis & Wraps",
     items: [
       {
@@ -178,6 +184,9 @@ export const FULL_MENU_DATA = [
     ]
   },
   {
+    id: "sides",
+    title: "Fries & Cheesy Sides",
+    description: "Golden crinkle fries and molten cheesy snacks.",
     category: "Fries & Cheesy Sides",
     items: [
       {
@@ -223,6 +232,9 @@ export const FULL_MENU_DATA = [
     ]
   },
   {
+    id: "shakes",
+    title: "Thick Shakes & Desserts",
+    description: "Chilled dense shakes and warm dessert cakes.",
     category: "Thick Shakes & Desserts",
     items: [
       {
