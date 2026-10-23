@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 import {
   UtensilsCrossed,
   MapPin,
@@ -33,6 +34,7 @@ import {
   Sparkles,
   ChevronRight,
   Flame,
+  User,
 } from "lucide-react";
 
 // Menu categories with quick links
@@ -76,8 +78,7 @@ const storyLinks = [
 ];
 
 export function VercelNavbar() {
-  const pathname = usePathname();
-  const { totalCount, openDrawer } = useCart();
+  const { profile } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -247,13 +248,24 @@ export function VercelNavbar() {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
-            
-            {/* Cart Trigger Button */}
-            <button
-              type="button"
-              onClick={openDrawer}
-              aria-label={`Open shopping cart with ${totalCount} items`}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-black bg-[#FFBA12] hover:bg-[#ffc636] active:scale-95 rounded-full transition-all shadow-md shadow-[#FFBA12]/20 cursor-pointer"
+            {/* Direct Club Auth / Profile Link */}
+            <Link
+              href="/login"
+              className={cn(
+                "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all",
+                profile
+                  ? "bg-[#FFBA12]/15 text-[#FFBA12] border-[#FFBA12]/30 hover:bg-[#FFBA12]/25"
+                  : "bg-white/5 text-neutral-300 border-white/10 hover:bg-white/10 hover:text-white"
+              )}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>{profile ? "Account" : "Sign In"}</span>
+            </Link>
+
+            {/* Quick Order Button */}
+            <Link
+              href="/menu"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-black bg-[#FFBA12] hover:bg-[#ffc636] active:scale-95 rounded-full transition-all shadow-md shadow-[#FFBA12]/20"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>{pathname === "/menu" ? "Cart" : "Order Now"}</span>
@@ -262,8 +274,8 @@ export function VercelNavbar() {
                   {totalCount}
                 </span>
               )}
-            </button>
-
+            </Link>
+              
             {/* Quick Contact Dropdown */}
             <div className="hidden sm:block">
               <DropdownMenu>
